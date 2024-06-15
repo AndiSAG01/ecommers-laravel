@@ -29,7 +29,7 @@
                                         <tr>
                                             <th scope="row">{{ $row->id }}</th>
                                             <td>
-												<img src="{{ asset('/storage/products/'. $row->image) }}" width="100" height="100" class="rounded me-2 bf-light" alt="product">
+												<img src="{{ Storage::url($row->image) }}" width="100" height="100" class="rounded me-2 bf-light" alt="product">
 											</td>
                                             <td>
                                                 <strong>{{ $row->name }}</strong>

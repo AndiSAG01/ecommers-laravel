@@ -39,10 +39,22 @@
                                 <span class="">{{ chunk_split($customer['phone'], 4); }}</span>
                             </div>
                             <div class="d-grid justify-content-start align-items-center mb-3">
-                                <span class=" h6 mb-0">Alamat:</span>
-                                <span class=" mb-0">{{ ucwords($customer->address) }},</span>
-                                    <span class=" mb-0">{{ $customer->district->name }}, {{ $customer->district->city->name }}, {{ $customer->district->city->province->name }} {{ $customer->postal_code }}</span>
+                                <span class="h6 mb-0">Alamat:</span>
+                                <span class="mb-0">{{ ucwords($customer->address) }},</span>
+                                <span class="mb-0">
+                                    @if($customer->district)
+                                        {{ $customer->district->name }},
+                                        @if($customer->district->city)
+                                            {{ $customer->district->city->name }},
+                                            @if($customer->district->city->province)
+                                                {{ $customer->district->city->province->name }}
+                                            @endif
+                                        @endif
+                                    @endif
+                                    {{ $customer->postal_code }}
+                                </span>
                             </div>
+                            
                             <div class="d-flex justify-content-start align-items-center">
                                 <span class="">
                                     <a href="{{ route('customer.setting') }}" class="product-remove">Pengaturan akun</a>

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->integer('price');
             $table->integer('weight');
             $table->integer('qty')->default(1);
-            $table->string('image')->default('default.png');
+            $table->string('image');
             $table->text('description')->nullable();
             $table->integer('status');
             $table->timestamps();

@@ -81,13 +81,25 @@
                                                 $provinces = DB::table('provinces')->orderBy('name', 'ASC')->get();
                                             @endphp
                                             <select name="province_id" id="province_id" class="form-select">
-                                                @foreach ($provinces as $row)
-                                                    <option value="{{ $row->id }}" {{ $customer->district->province_id == $row->id ? 'selected':'' }}>{{ $row->name }}</option>
-                                                @endforeach
+                                                @if (auth()->guard('customer')->check())
+                                                    @foreach ($provinces as $row)
+                                                        <option value="{{ $row->id }}"
+                                                            {{ $customer->district && $customer->district->province_id == $row->id ? 'selected' : '' }}>
+                                                            {{ $row->name }}
+                                                        </option>
+                                                    @endforeach
+                                                @else
+                                                    @foreach ($provinces as $row)
+                                                        <option value="{{ $row->id }}">{{ $row->name }}
+                                                        </option>
+                                                    @endforeach
+                                                @endif
                                             </select>
                                             <p class="smaller text-danger">{{ $errors->first('province_id') }}</p>
+                                            <input type="hidden" name="shipping" id="shipping_input">
                                         </fieldset>
                                     </div>
+
                                     <div class="col-lg-6 col-md-12 col-12">
                                         <fieldset>
                                             <label for="city_id" class="label">Kota</label>
@@ -95,6 +107,7 @@
                                                 <option value=""></option>
                                             </select>
                                             <p class="smaller text-danger">{{ $errors->first('city_id') }}</p>
+                                            <input type="hidden" name="weight" id="weight">
                                         </fieldset>
                                     </div>
                                     <div class="col-lg-6 col-md-12 col-12">
@@ -156,41 +169,69 @@
     $('#city_id').prop('disabled', false);
     $('#district_id').prop('disabled', false);
 
-    function loadCity(province_id, type) {
-        return new Promise((resolve, reject) => {
-            $.ajax({
-                url: "{{ url('/api/city') }}",
-                type: "GET",
-                data: { province_id: province_id },
-                success: function(html){
-                    $('#city_id').empty();
-                    $('#city_id').append('');
-                    $.each(html.data, function(key, item) {
-                        let city_selected = {{ $customer->district->city_id }};
-                        let selected = type == 'bySelect' && city_selected == item.id ? 'selected' : '';
-                        $('#city_id').append('<option value="'+item.id+'" '+ selected +'>'+item.name+'</option>');
-                        resolve();
-                    });
-                }
-            });
-        });
-    }
+    @if (auth()->guard('customer')->check() && $customer->district)
+                let citySelected = {{ $customer->district->city_id }};
+            @else
+                let citySelected = null;
+            @endif
 
-    function loadDistrict(city_id, type) {
-        $.ajax({
-            url: "{{ url('/api/district') }}",
-            type: "GET",
-            data: { city_id: city_id },
-            success: function(html){
-                $('#district_id').empty();
-                $('#district_id').append('');
-                $.each(html.data, function(key, item) {
-                    let district_selected = {{ $customer->district->id }};
-                    let selected = type == 'bySelect' && district_selected == item.id ? 'selected' : '';
-                    $('#district_id').append('<option value="'+item.id+'" '+ selected +'>'+item.name+'</option>');
+            function loadCity(province_id, type) {
+                return new Promise((resolve, reject) => {
+                    $.ajax({
+                        url: "{{ url('/api/city') }}",
+                        type: "GET",
+                        data: {
+                            province_id: province_id
+                        },
+                        success: function(html) {
+                            $('#city_id').empty();
+                            $('#city_id').append('<option value=""></option>'); // Add default empty option
+                            $.each(html.data, function(key, item) {
+                                let selected = type == 'bySelect' && citySelected == item.id ?
+                                    'selected' : '';
+                                $('#city_id').append('<option value="' + item.id + '" ' + selected +
+                                    '>' + item.name + '</option>');
+                            });
+                            $('#city_id').prop('disabled',
+                                false); // Enable the select after loading options
+                            resolve();
+                        },
+                        error: function(err) {
+                            console.error(err);
+                            reject(err);
+                        }
+                    });
                 });
             }
-        });
-    }
+
+            @if (auth()->guard('customer')->check() && $customer->district)
+                let districtSelected = {{ $customer->district->id }};
+            @else
+                let districtSelected = null;
+            @endif
+
+            function loadDistrict(city_id, type) {
+                $.ajax({
+                    url: "{{ url('/api/district') }}",
+                    type: "GET",
+                    data: {
+                        city_id: city_id
+                    },
+                    success: function(html) {
+                        $('#district_id').empty();
+                        $('#district_id').append('<option value=""></option>'); // Add default empty option
+                        $.each(html.data, function(key, item) {
+                            let selected = type == 'bySelect' && districtSelected == item.id ? 'selected' :
+                                '';
+                            $('#district_id').append('<option value="' + item.id + '" ' + selected + '>' +
+                                item.name + '</option>');
+                        });
+                        $('#district_id').prop('disabled', false); // Enable the select after loading options
+                    },
+                    error: function(err) {
+                        console.error(err);
+                    }
+                });
+            }
 </script>
 @endsection

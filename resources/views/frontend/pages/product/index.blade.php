@@ -40,8 +40,8 @@
                             "asNavFor": ".img-thumb-slider"
                         }'>
                             <div class="img-large-wrapper">
-                                <a href="{{ asset('storage/products/'. $product->image) }}" data-fancybox="gallery">
-                                    <img src="{{ asset('storage/products/'. $product->image) }}" alt="img">
+                                <a href="{{ Storage::url($product->image) }}" data-fancybox="gallery">
+                                    <img src="{{ Storage::url($product->image) }}" alt="img">
                                 </a>
                             </div>
                         </div>

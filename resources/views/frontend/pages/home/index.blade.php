@@ -19,9 +19,8 @@
         </div>
     </div>
 </div>
-
 @foreach ($products as $category => $items)
-    @if ($category == 'liquid')
+@if ($category == 'liquid')
         <div class="banner-section mt-100 overflow-hidden">
             <div class="banner-section-inner">
                 <div class="container">
@@ -86,11 +85,11 @@
                                 <div class="product-card">
                                     <div class="product-card-img">
                                         <a href="{{ route('front.show', $row->slug) }}" class="hover-switch">
-                                            <img src="{{ asset('storage/products/' . $row->image) }}" class="secondary-img" alt="product-img">
-                                            <img src="{{ asset('storage/products/' . $row->image) }}" class="primary-img" alt="product-img">
+                                            <img src="{{ Storage::url($row->image) }}" class="secondary-img" alt="product-img">
+                                            <img src="{{ Storage::url($row->image) }}" class="primary-img" alt="product-img">
                                         </a>
                                     </div>
-                                    <div class="product-card-details">
+                                <div class="product-card-details">
                                         <h3 class="product-card-title">
                                             <a href="{{ route('front.show', $row->slug) }}">{{ $row->name }}</a>
                                         </h3>

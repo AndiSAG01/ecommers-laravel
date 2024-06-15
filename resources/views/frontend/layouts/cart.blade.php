@@ -22,7 +22,7 @@
                     @foreach (\App\Services\Helper::getAllProductsInCart() as $data)
                         <div class="minicart-item d-flex">
                             <div class="mini-img-wrapper">
-                                <img class="mini-img" src="{{ asset('storage/products/'. $data['product_image']) }}" alt="img">
+                                <img class="mini-img" src="{{ Storage::url( $data['product_image']) }}" alt="img">
                             </div>
                             <div class="product-info">
                                 <h2 class="product-title">

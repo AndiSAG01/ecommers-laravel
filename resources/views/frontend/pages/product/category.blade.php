@@ -54,8 +54,8 @@
                                 <div class="product-card">
                                     <div class="product-card-img">
                                         <a href="{{ route('front.show', $row->slug) }}" class="hover-switch">
-                                            <img src="{{ asset('storage/products/' . $row->image) }}" class="secondary-img" alt="product-img">
-                                            <img src="{{ asset('storage/products/' . $row->image) }}" class="primary-img" alt="product-img">
+                                            <img src="{{ Storage::url($row->image) }}" class="secondary-img" alt="product-img">
+                                            <img src="{{ Storage::url($row->image) }}" class="primary-img" alt="product-img">
                                         </a>
                                     </div>
                                     <div class="product-card-details">
